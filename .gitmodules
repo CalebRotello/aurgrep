@@ -1,0 +1,3 @@
+[submodule "include/neon"]
+	path = include/neon
+	url = git@github.com:notroj/neon.git

@@ -11,6 +11,10 @@
 #include <cstdint>
 #include <cstring>
 
+#include <curlpp/cURLpp.hpp>
+#include <curlpp/Easy.hpp>
+#include <curlpp/Options.hpp>
+#include <curlpp/Infos.hpp>
 
 namespace fs = std::filesystem;
 
@@ -21,8 +25,11 @@ class Greper {
     std::string AUR_CLONE_URL;
     std::string SYS_PKG_LOC;
 
+    int http_code;
+
 public:
     Greper();
+    ~Greper();
 
     void download(const std::string& pkgname); 
     void check_repo();

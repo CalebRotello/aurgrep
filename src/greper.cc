@@ -1,11 +1,14 @@
 
 #include "greper.h"
 
-Greper::Greper() {}
+Greper::Greper() {cURLpp::initialize();}//cURLpp:CURL_GLOBAL_ALL);}
+Greper::~Greper() {cURLpp::terminate();}
 
 void Greper::meta_dir_setup() {
     const fs::path p = fs::path(GIT_DIR);
-    bool make_dir_check = fs::create_directory(p);
+    if(fs::create_directory(p))
+       std::cout << "Could not find AUR directory, creating " << GIT_DIR << std::endl;
+    
 }
 
 void Greper::is_installed() {
@@ -19,6 +22,8 @@ void Greper::is_installed() {
                 case 'y':
                 case 'Y':
                     /* reinstall */
+                    std::cout << "Deleting package directory..." << std::endl;
+                    fs::remove_all(SYS_PKG_LOC); 
                     return;
                 case 'n':
                 case 'N':
@@ -30,43 +35,21 @@ void Greper::is_installed() {
     }
 }
 
+/* is this a package? */
 void Greper::check_repo() {
-    /* is this a package? */
-    
-    //char p_request[100]={0};
- 
-    ////char p_resourcepath[]="2019/07/creating-xml-request-in-cpp-for-server.html";
-    ////std::stp_resourcepath= (AUR_SEARCH+PKGNAME).c_str();
- 
-    ////char p_hostaddress[]="www.cplusplus.com";
-    //const char *p_hostaddress = AUR_SEARCH.c_str();
- 
-    //sprintf(p_request, "GET %s"/* HTTP/1.1\r\nHost: %s "\r\nContent-Type: text/plain\r\n\r\n", p_resourcepath, p_hostaddress */, (AUR_SEARCH+PKGNAME).c_str());
- 
-    //std::cout<< p_request;
 
-    //int pd[2];
-    //int retValue;
-    //char buffer[255] = {0};
-    //pipe(pd);
-    ////dup2(pd[1],1);
-    //retValue = system(("curl  --silent --head \"" + AUR_SEARCH + PKGNAME + "\"  ").c_str());
-    ///* yes, this is hacky, but that's what I get for dipping into C for a few lines */
-    ////read(pd[0], buffer,  2) > 0; 
-    ////fscanf(stdin, "%[^ ]", buffer);
-    ////fgets(buffer, 255, stdin);
-    ////std::ifstream file(stdin);
+    /* create request */
+    curlpp::options::Url search_url(AUR_SEARCH+PKGNAME);
+    curlpp::Easy request;
+    std::stringstream sstr;
+    request.setOpt(search_url);
+    request.setOpt(new curlpp::options::WriteStream(&sstr));
 
-
-    //std::string result = buffer;//std::to_string(buffer);
-    //std::cout << result << std::endl;
-    //char *delim = " ";
-    //char *c = strtok(buffer, delim);
-    //printf("%s\n", c);
-    //c = strtok(buffer, delim);
-    ////printf("%s,\n", buffer);
-
-    //printf("%s\n", c);
+    /* do request & handle results */
+    std::cout << "Searching AUR for package...\n";
+    request.perform();
+    this->http_code = curlpp::infos::ResponseCode::get(request);  
+    std::cout << "Search returned code " << http_code << std::endl;
 
 }
 
@@ -86,6 +69,12 @@ void Greper::download(const std::string& pkgname) {
     check_repo();
 
     /* if install failed, figure stuff out */
+    if (http_code != 200) {
+        std::cout << pkgname << " not found, exiting..." << std::endl;
+        exit(0);
+    } else {
+        system(("git clone " + AUR_CLONE_URL + " " + SYS_PKG_LOC).c_str());
+    }
 
     /* otherwise, enjoy! */
     
