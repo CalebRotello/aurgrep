@@ -1,8 +1,6 @@
 
 #include "greper.h"
 
-#include <curl/curl.h>
-
 Greper::Greper() {}
 
 void Greper::meta_dir_setup() {
@@ -34,12 +32,7 @@ void Greper::is_installed() {
 
 void Greper::check_repo() {
     /* is this a package? */
-    CURL *curl = curl_easy_init();
-    if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, (AUR_SEARCH+PKGNAME).c_str());
-        curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
-        curl_easy_perform(curl);
-    }
+    
     //char p_request[100]={0};
  
     ////char p_resourcepath[]="2019/07/creating-xml-request-in-cpp-for-server.html";

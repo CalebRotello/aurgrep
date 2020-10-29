@@ -12,8 +12,6 @@
 #include <cstring>
 
 
-//#include <curlpp/cURLpp.hpp>
-
 namespace fs = std::filesystem;
 
 class Greper {
