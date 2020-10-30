@@ -2,8 +2,13 @@
 #ifndef UTILITIES_H_
 #define UTILITIES_H_
 
-#include <cstdint>
 #include <string>
+#include <iostream>
+#include <set>
+#include <algorithm>
+#include <vector>
+
+namespace Settings {
 
 /** ExecutionType
  * mode this program is running in
@@ -14,21 +19,13 @@ enum ExecutionType : std::uint_least8_t {
     SEARCH,
 };
 
-/** Settings
- * handle program meta events
- */ 
-class Settings {
-    std::string query;    
-    ExecutionType exec_type;
+extern std::set<std::string> pkglist;    
+extern ExecutionType exec_type;
+extern bool SHOW_PKGBUILD;
 
-public:
-    /** ctor.
-     * parse command line flags
-     */ 
-    Settings(int& argc, char** argv);
+void show_help();
+void read_settings(int& argc, char** argv);
 
-    const std::string& get_query() const;
-    const ExecutionType& get_exec_type() const;
-};
+}
 
 #endif /* UTILITIES_H_ */

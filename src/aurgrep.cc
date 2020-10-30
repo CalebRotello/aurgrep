@@ -2,17 +2,23 @@
 #include "utilities.h"
 #include "greper.h"
 
+#include <fstream>
+
 int main(int argc, char** argv) {
 
     /* parse cli */
-    Settings settings = Settings(argc, argv); 
+    Settings::read_settings(argc, argv);
     Greper greper = Greper();
 
     /* do software */
-    if (settings.get_exec_type() == ExecutionType::SEARCH) {
-        greper.search(settings.get_query());
-    } else if (settings.get_exec_type() == ExecutionType::DOWNLOAD) {
-        greper.download(settings.get_query());        
+    if (Settings::exec_type == Settings::ExecutionType::SEARCH) {
+        for (auto pkg : Settings::pkglist) {
+            greper.search(pkg);
+        }
+    } else if (Settings::exec_type == Settings::ExecutionType::DOWNLOAD) {
+        for (auto pkg : Settings::pkglist) {
+            greper.download(pkg);        
+        }
     } 
 
     return 0;
