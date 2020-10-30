@@ -5,9 +5,11 @@
 #include <string>
 #include <iostream>
 #include <filesystem>
+#include <memory>
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
+#include <regex>
 
 #include <curlpp/cURLpp.hpp>
 #include <curlpp/Easy.hpp>
@@ -50,6 +52,9 @@ public:
      * do https request to search the AUR by name
      */
     void query(); 
+
+    /* WARNING -- this function changes the string passed to it */
+    void clean(std::string& search_response);
 
     /** download
      *  if download is the option, called from main

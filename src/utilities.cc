@@ -3,14 +3,15 @@
 
 namespace Settings {
 
+/* namespace variable initialization */
 std::set<std::string> pkglist = std::set<std::string>();
 ExecutionType exec_type = HELP;
+bool SHOW_PKGBUILD = false;
 
 void read_settings(int& argc, char** argv) {
     // read args into a set
     std::set<std::string> arglist = std::set<std::string>();
     for (int i = 1; i < argc; i++) {
-        //std::string tmpstr = "";
         std::string argstr = argv[i];
 
         // full word command

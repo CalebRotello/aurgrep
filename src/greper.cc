@@ -3,9 +3,7 @@
 
 Greper::Greper() {
     cURLpp::initialize();
-    //struct passwd *pw = getpwuid(getuid());
-    //const char *homedir = pw->pw_dir;
-    this->SYS_USERNAME = std::string(getpwuid(getuid())->pw_dir);//homedir);
+    this->SYS_USERNAME = std::string(getpwuid(getuid())->pw_dir); // username filepath
     this->GIT_DIR = SYS_USERNAME+"/aur/";
 }
 
@@ -86,7 +84,6 @@ void Greper::download(const std::string& pkgname) {
         /* search for package in AUR ?*/
         search();
 
-        //exit(0);
     } else {
         std::cout << std::endl;
         system(("git clone " + AUR_CLONE_URL + " " + SYS_PKG_LOC).c_str());
@@ -107,10 +104,24 @@ void Greper::query() {
     std::cout << "Searching AUR for package...\n";
     request.perform();
     this->http_code = curlpp::infos::ResponseCode::get(request);  
-    //std::cout << request << std::endl;
 
-    //std::cout << "Search returned code " << http_code << std::endl;
+    /* clean results */
+    std::string result_str = sstr.str();
+    clean(result_str);
+
 }
+
+void Greper::clean(std::string& search_response) {
+
+    std::smatch mstr;
+    std::regex regex ("/packages/[A-Za-z\-]+");
+    while (std::regex_search(search_response, mstr, regex)) {
+        for (auto x : mstr) std::cout << x << " ";
+        std::cout << std::endl << std::endl;
+        search_response = mstr.suffix().str();
+    }
+}
+
 
 void Greper::search(const std::string &pkgname) {
     this->PKGNAME = pkgname;
@@ -118,6 +129,6 @@ void Greper::search(const std::string &pkgname) {
 }
 
 void Greper::search() {
-    this->AUR_SEARCH = AUR_PACKAGES + "?O=0&SeB=nd&K=" + PKGNAME + "&outdated=&SB=n&SO=a&PP=50&do_Search=Go";
+    this->AUR_SEARCH = AUR_PACKAGES + "?O=0&K=" + PKGNAME;//"?O=0&SeB=nd&K=" + PKGNAME + "&outdated=&SB=n&SO=a&PP=50&do_Search=Go";
     query();
 }
