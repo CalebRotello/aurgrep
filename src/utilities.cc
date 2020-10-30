@@ -47,8 +47,3 @@ const std::string& Settings::get_query() const {
 const ExecutionType& Settings::get_exec_type() const {
     return this->exec_type;
 }
-
-
-//ExecutionType parse_command_line(int& argc, char** argv) {
-//
-//}

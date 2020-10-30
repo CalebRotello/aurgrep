@@ -10,10 +10,10 @@ int main(int argc, char** argv) {
 
     /* do software */
     if (settings.get_exec_type() == ExecutionType::SEARCH) {
-
+        greper.search(settings.get_query());
     } else if (settings.get_exec_type() == ExecutionType::DOWNLOAD) {
         greper.download(settings.get_query());        
-    }
+    } 
 
     return 0;
 }

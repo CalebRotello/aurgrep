@@ -5,19 +5,26 @@
 #include <cstdint>
 #include <string>
 
+/** ExecutionType
+ * mode this program is running in
+ */ 
 enum ExecutionType : std::uint_least8_t {
     HELP,
     DOWNLOAD,
     SEARCH,
 };
 
-//ExecutionType parse_command_line(int& argc, char** argv);
-
+/** Settings
+ * handle program meta events
+ */ 
 class Settings {
     std::string query;    
     ExecutionType exec_type;
 
 public:
+    /** ctor.
+     * parse command line flags
+     */ 
     Settings(int& argc, char** argv);
 
     const std::string& get_query() const;
