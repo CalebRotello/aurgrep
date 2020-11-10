@@ -1,5 +1,5 @@
 
-#include "utilities.h"
+//#include "utilities.h"
 #include "greper.h"
 
 #include <fstream>
@@ -17,9 +17,16 @@ int main(int argc, char** argv) {
         }
     } else if (Settings::exec_type == Settings::ExecutionType::DOWNLOAD) {
         for (auto pkg : Settings::pkglist) {
+            std::cout << "Downloading " << pkg << std::endl;
             greper.download(pkg);        
         }
-    } 
+    // this is in two places, here and greper.download, so pkbuilds print with the package
+    } else if (Settings::SHOW_PKGBUILD) {
+        for (auto pkg : Settings::pkglist) {
+            greper.show_pkgbuild(pkg);        
+        }
+    }
+
 
     return 0;
 }

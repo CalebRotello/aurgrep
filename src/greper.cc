@@ -87,6 +87,9 @@ void Greper::download(const std::string& pkgname) {
     } else {
         std::cout << std::endl;
         system(("git clone " + AUR_CLONE_URL + " " + SYS_PKG_LOC).c_str());
+        if (Settings::SHOW_PKGBUILD) {
+            show_pkgbuild(PKGNAME);
+        }
     }
     std::cout << "Finished." << std::endl;
 }
@@ -113,11 +116,23 @@ void Greper::query() {
 
 void Greper::clean(std::string& search_response) {
 
+    std::string cs;
     std::smatch mstr;
-    std::regex regex ("/packages/[A-Za-z\-]+");
-    while (std::regex_search(search_response, mstr, regex)) {
-        for (auto x : mstr) std::cout << x << " ";
-        std::cout << std::endl << std::endl;
+    std::regex name_regex("/packages/[A-Za-z\-]+");
+    std::regex desc_regex("wrap\">.+?(?=</td)");
+    std::cout << "AUR Packages: " << std::endl;
+
+    /* regex each package */
+    while (std::regex_search(search_response, mstr, name_regex)) {
+        std::cout << mstr.begin()->str().substr(10) << "\n";
+        search_response = mstr.suffix().str();
+
+        /* get description here */
+        std::regex_search(search_response, mstr, desc_regex);
+        cs = mstr.begin()->str();
+        std::cout << "  " << cs.substr(6, cs.length()-5);
+        std::cout << std::endl <<std::endl;
+
         search_response = mstr.suffix().str();
     }
 }
@@ -131,4 +146,19 @@ void Greper::search(const std::string &pkgname) {
 void Greper::search() {
     this->AUR_SEARCH = AUR_PACKAGES + "?O=0&K=" + PKGNAME;//"?O=0&SeB=nd&K=" + PKGNAME + "&outdated=&SB=n&SO=a&PP=50&do_Search=Go";
     query();
+}
+
+void Greper::show_pkgbuild(const std::string& pkgname) {
+    std::fstream file(SYS_USERNAME+"/aur/"+pkgname+"/PKGBUILD");
+    std::cout << SYS_PKG_LOC << std::endl;
+    std::string file_printer = "";
+    if (file) {
+        while(getline(file,file_printer)) {
+            std::cout << file_printer<<std::endl;
+        }
+    } else {
+        std::cerr << "Could not find PKGBUILD" << std::endl;
+        exit(1);
+    }
+    file.close();
 }

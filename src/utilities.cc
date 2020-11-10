@@ -11,6 +11,10 @@ bool SHOW_PKGBUILD = false;
 void read_settings(int& argc, char** argv) {
     // read args into a set
     std::set<std::string> arglist = std::set<std::string>();
+    if (argc == 1) {
+        show_help();
+        return;
+    }
     for (int i = 1; i < argc; i++) {
         std::string argstr = argv[i];
 

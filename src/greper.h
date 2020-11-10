@@ -4,6 +4,7 @@
 
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <filesystem>
 #include <memory>
 #include <unistd.h>
@@ -15,6 +16,8 @@
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 #include <curlpp/Infos.hpp>
+
+#include "utilities.h"
 
 namespace fs = std::filesystem;
 
@@ -75,6 +78,12 @@ public:
      *  we need a directory to keep each package 
      */ 
     void meta_dir_setup();
+
+    /** show_pkgbuild
+     *  print the pkgbuild file
+     */ 
+    void show_pkgbuild(const std::string& pkgname);
+
 };
 
 #endif /* DOWNLOAD_H_ */
