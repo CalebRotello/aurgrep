@@ -9,22 +9,24 @@ ExecutionType exec_type = HELP;
 bool SHOW_PKGBUILD = false;
 
 void read_settings(int& argc, char** argv) {
-    // read args into a set
+    // read args into a set except last one
     std::set<std::string> arglist = std::set<std::string>();
+    std::string argstr;
     if (argc == 1) {
         show_help();
         return;
     }
     for (int i = 1; i < argc; i++) {
-        std::string argstr = argv[i];
+        argstr = argv[i];
 
         // full word command
-        if (argstr.find("--") < argstr.length()-2) {
+        if (argstr.find("--") == 0) {//< argstr.length()-2) {
             arglist.insert(argstr.substr(2));
         // single letter commands
-        } else if (argstr[0] == '-') 
-            for (int c = 1; c < argstr.length(); c++) {
+        } else if (argstr[0] == '-') {
+            for (size_t c = 1; c < argstr.length(); c++) {
                 arglist.insert(std::string(1, argstr[c]));
+            }
         // package
         } else {
             pkglist.insert(argstr);
@@ -36,7 +38,7 @@ void read_settings(int& argc, char** argv) {
         exec_type = HELP;
         show_help();
     }
-    else if (arglist.count("d") || arglist.count("download"))
+    else if (arglist.count("S") || arglist.count("download"))
         exec_type = DOWNLOAD;
     else if (arglist.count("s") || arglist.count("search"))
         exec_type = SEARCH;

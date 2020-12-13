@@ -13,6 +13,7 @@ int main(int argc, char** argv) {
     /* do software */
     if (Settings::exec_type == Settings::ExecutionType::SEARCH) {
         for (auto pkg : Settings::pkglist) {
+            std::cout << pkg << std::endl;
             greper.search(pkg);
         }
     } else if (Settings::exec_type == Settings::ExecutionType::DOWNLOAD) {

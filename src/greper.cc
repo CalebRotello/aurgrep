@@ -145,6 +145,7 @@ void Greper::search(const std::string &pkgname) {
 
 void Greper::search() {
     this->AUR_SEARCH = AUR_PACKAGES + "?O=0&K=" + PKGNAME;//"?O=0&SeB=nd&K=" + PKGNAME + "&outdated=&SB=n&SO=a&PP=50&do_Search=Go";
+    std::cout << AUR_SEARCH << std::endl;
     query();
 }
 
